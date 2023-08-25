@@ -1,6 +1,16 @@
 const { registerService, loginService } = require('../services/auth');
 const error = require('../utils/error');
 
+/**
+ * Create a new user.
+ *
+ * @function
+ * @name registerController
+ * @memberof module:UserController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {void}
+ */
 const registerController = async (req, res, next) => {
     const { name, email, password, confirmPassword, roles } = req.body;
     if (!name || !email || !password) {
@@ -14,6 +24,16 @@ const registerController = async (req, res, next) => {
     }
 };
 
+/**
+ * login user.
+ *
+ * @function
+ * @name loginController
+ * @memberof module:UserController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {token}
+ */
 const loginController = async (req, res, next) => {
     const { email, password } = req.body;
     try {

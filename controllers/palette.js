@@ -4,6 +4,16 @@ const error = require('../utils/error');
 const { colorDistance } = require('../utils');
 const { createNewPalette, findPalettes, findPaletteById } = require('../services/palette');
 
+/**
+ * Create a new Palette.
+ *
+ * @function
+ * @name createPaletteController
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {palette}
+ */
 const createPaletteController = async (req, res, next) => {
     const { name, dominantColors, accentColors, status } = req.body;
     if (!name || !dominantColors || !accentColors) {
@@ -23,7 +33,16 @@ const createPaletteController = async (req, res, next) => {
         return next(e);
     }
 };
-
+/**
+ * Get all Palette.
+ *
+ * @function
+ * @name getPalettesController
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {palettes}
+ */
 const getPalettesController = async (_req, res, next) => {
     try {
         const palettes = await findPalettes('status', 'public');
@@ -34,6 +53,16 @@ const getPalettesController = async (_req, res, next) => {
     }
 };
 
+/**
+ * Get all favorite Palette.
+ *
+ * @function
+ * @name getFavoritePalettesController
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {palettes}
+ */
 const getFavoritePalettesController = async (_req, res, next) => {
     try {
         const palettes = await findPalettes('isFavorite', true);
@@ -44,6 +73,16 @@ const getFavoritePalettesController = async (_req, res, next) => {
     }
 };
 
+/**
+ * Get one Palette.
+ *
+ * @function
+ * @name getPaletteController
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {palette}
+ */
 const getPaletteController = async (req, res, next) => {
     const { paletteId } = req.params;
     if (!mongoose.isValidObjectId(paletteId)) {
@@ -57,6 +96,16 @@ const getPaletteController = async (req, res, next) => {
     }
 };
 
+/**
+ * Update Palette status . its sets status public or private.
+ *
+ * @function
+ * @name updatePaletteStatusController
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {update palette}
+ */
 const updatePaletteStatusController = async (req, res, next) => {
     const { paletteId } = req.params;
     if (!mongoose.isValidObjectId(paletteId)) {
@@ -71,6 +120,17 @@ const updatePaletteStatusController = async (req, res, next) => {
         return next(e);
     }
 };
+
+/**
+ * Update Palette favorite status . its sets status true or false.
+ *
+ * @function
+ * @name updatePaletteStatusController
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {update palette}
+ */
 const togglePaletteFavoriteController = async (req, res, next) => {
     const { paletteId } = req.params;
     if (!mongoose.isValidObjectId(paletteId)) {
@@ -86,6 +146,16 @@ const togglePaletteFavoriteController = async (req, res, next) => {
     }
 };
 
+/**
+ * Get all Palette by search query params. this query params are name or color.
+ *
+ * @function
+ * @name getPalettesBySearchQuery
+ * @memberof module:PaletteController
+ * @param {express.Request} req - The Express request object.
+ * @param {express.Response} res - The Express response object.
+ * @returns {palettes}
+ */
 const getPalettesBySearchQuery = async (req, res, next) => {
     const name = req?.query?.name?.toLowerCase();
     const targetColor = req?.query?.color;
@@ -94,16 +164,16 @@ const getPalettesBySearchQuery = async (req, res, next) => {
     try {
         const palettes = await findPalettes('status', 'public');
         if (name) {
-            matchingPalettes = palettes.filter((palette) =>
-                palette?.name?.toLowerCase().includes(name)
-            );
+            matchingPalettes = palettes.filter((palette) => palette?.name?.toLowerCase().includes(name));
         }
         if (targetColor) {
             const matchingThreshold = 100;
 
-            matchingPalettes = palettes?.filter((palette) => palette?.dominantColors?.some(
+            matchingPalettes = palettes?.filter((palette) =>
+                palette?.dominantColors?.some(
                     (color) => colorDistance(targetColor, color) < matchingThreshold
-                ));
+                )
+            );
         }
         return res.status(200).json({ message: 'success', matchingPalettes });
     } catch (e) {

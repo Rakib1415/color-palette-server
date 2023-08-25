@@ -1,4 +1,10 @@
-// Function to compare colors using Euclidean distance
+/**
+ * Function to compare colors using Euclidean distance
+ *
+ * @param {string} color1 - The first params.
+ * @param {string} color2 - The second params.
+ * @returns {number} return Euclidean distance.
+ */
 function colorDistance(color1, color2) {
     // Convert hex to RGB
     const r1 = parseInt(color1.slice(1, 3), 16);
