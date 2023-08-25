@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - mynet
+    volumes: 
+      - mongo_data:/data/db
+  moviehubserver:
+    image: colorpaletteserver
+    container_name: color-palettes
+    ports: 
+      - "3000:3000"
+    networks:
+      - mynet
+    volumes: 
+      - colorpalette_data:/usr/share/colorpalette/data
+    environment:
+      - DEBUG=1
+      - MONGO_HOST=mongo
+    depends_on:
+      - mongo
+networks:
+  mynet:
+    driver: bridge
+volumes:
+  mongo_data:
+  colorpalette_data:
